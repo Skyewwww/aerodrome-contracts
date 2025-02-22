@@ -11,7 +11,7 @@ abstract contract ExtendedBaseTest is BaseTest {
     // e.g. if we expect 1e18, precision of 1e12 means we will accept values of
     // 1e18 +- (1e6 * 1e12 / 1e18)
     uint256 public immutable PRECISION = 1e12;
-    uint256 public immutable MAX_TIME = 4 * 365 * 86400;
+    uint256 public immutable MAX_TIME = 1 * 365 * 86400;
 
     function _createBribeWithAmount(BribeVotingReward _bribeVotingReward, address _token, uint256 _amount) internal {
         IERC20(_token).approve(address(_bribeVotingReward), _amount);

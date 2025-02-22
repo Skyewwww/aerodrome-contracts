@@ -247,8 +247,8 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
                              METADATA STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    string public constant name = "veNFT";
-    string public constant symbol = "veNFT";
+    string public constant name = "veMomodrome";
+    string public constant symbol = "veMOMO";
     string public constant version = "2.0.0";
     uint8 public constant decimals = 18;
 
@@ -546,8 +546,8 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
     //////////////////////////////////////////////////////////////*/
 
     uint256 internal constant WEEK = 1 weeks;
-    uint256 internal constant MAXTIME = 4 * 365 * 86400;
-    int128 internal constant iMAXTIME = 4 * 365 * 86400;
+    uint256 internal constant MAXTIME = 1 * 365 * 86400;
+    int128 internal constant iMAXTIME = 1 * 365 * 86400;
     uint256 internal constant MULTIPLIER = 1 ether;
 
     /// @inheritdoc IVotingEscrow

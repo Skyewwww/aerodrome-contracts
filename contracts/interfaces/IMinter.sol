@@ -49,26 +49,20 @@ interface IMinter {
     /// @notice Duration of epoch in seconds
     function WEEK() external view returns (uint256);
 
-    /// @notice Decay rate of emissions as percentage of `MAX_BPS`
-    function WEEKLY_DECAY() external view returns (uint256);
+    /// @notice Decay rate of Steady-State emissions as percentage of `MAX_BPS`
+    function STEADY_WEEKLY_DECAY() external view returns (uint256);
 
-    /// @notice Growth rate of emissions as percentage of `MAX_BPS` in first 14 weeks
-    function WEEKLY_GROWTH() external view returns (uint256);
+    /// @notice Growth rate of first Bootstrap Phase emissions as percentage of `MAX_BPS` in first 8 weeks
+    function SECOND_WEEKLY_GROWTH() external view returns (uint256);
 
-    /// @notice Maximum tail emission rate in basis points.
-    function MAXIMUM_TAIL_RATE() external view returns (uint256);
-
-    /// @notice Minimum tail emission rate in basis points.
-    function MINIMUM_TAIL_RATE() external view returns (uint256);
+    /// @notice Growth rate of second Bootstrap Phase emissions as percentage of `MAX_BPS` in first 8 weeks
+    function FRIST_WEEKLY_GROWTH() external view returns (uint256);
 
     /// @notice Denominator for emissions calculations (as basis points)
     function MAX_BPS() external view returns (uint256);
 
     /// @notice Rate change per proposal
     function NUDGE() external view returns (uint256);
-
-    /// @notice When emissions fall below this amount, begin tail emissions
-    function TAIL_START() external view returns (uint256);
 
     /// @notice Maximum team percentage in basis points
     function MAXIMUM_TEAM_RATE() external view returns (uint256);

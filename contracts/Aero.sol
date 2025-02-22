@@ -13,7 +13,7 @@ contract Aero is IAero, ERC20Permit {
     address public minter;
     address private owner;
 
-    constructor() ERC20("Aerodrome", "AERO") ERC20Permit("Aerodrome") {
+    constructor() ERC20("Momodrome", "MOMO") ERC20Permit("Momodrome") {
         minter = msg.sender;
         owner = msg.sender;
     }
