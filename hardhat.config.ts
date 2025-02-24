@@ -19,6 +19,14 @@ export default {
         base: {
             url: `${process.env.BASE_RPC_URL}`,
             accounts: [`${process.env.PRIVATE_KEY_DEPLOY}`]
+        },
+        morph_testnet: {
+            url: `https://rpc-quicknode-holesky.morphl2.io`,
+            accounts: [`${process.env.PRIVATE_KEY_DEPLOY}`]
+        },
+        morph: {
+            url: `https://rpc-quicknode.morphl2.io`,
+            accounts: [`${process.env.PRIVATE_KEY_DEPLOY}`]
         }
     },
     solidity: {
@@ -30,6 +38,30 @@ export default {
             },
             viaIR: true,
         }
+    },
+    etherscan: {
+        apiKey: {
+            morph: "dodo",
+            morph_testnet: "dodo",
+        },
+        customChains: [
+            {
+                network: "morph",
+                chainId: 2818,
+                urls: {
+                    apiURL: "https://explorer-api.morphl2.io/api?",
+                    browserURL: "https://explorer.morphl2.io",
+                },
+            },
+            {
+                network: "morph_testnet",
+                chainId: 2810,
+                urls: {
+                  apiURL: 'https://explorer-api-holesky.morphl2.io/api? ',
+                  browserURL: 'https://explorer-holesky.morphl2.io/',
+                },
+            },
+        ]
     },
     tenderly: {
         username: "velodrome-finance",

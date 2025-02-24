@@ -58,6 +58,9 @@ interface IMinter {
     /// @notice Growth rate of second Bootstrap Phase emissions as percentage of `MAX_BPS` in first 8 weeks
     function FRIST_WEEKLY_GROWTH() external view returns (uint256);
 
+    /// @notice Minimum tail emission rate in basis points.
+    function MINIMUM_TAIL_RATE() external view returns (uint256);
+
     /// @notice Denominator for emissions calculations (as basis points)
     function MAX_BPS() external view returns (uint256);
 
