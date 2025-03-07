@@ -27,23 +27,27 @@ contract Minter is IMinter {
     /// @inheritdoc IMinter
     uint256 public constant WEEK = 1 weeks;
     /// @inheritdoc IMinter
-    uint256 public constant FRIST_WEEKLY_GROWTH = 10_300;
+    uint256 public constant FIRST_WEEKLY_GROWTH = 10_300;
     /// @inheritdoc IMinter
     uint256 public constant SECOND_WEEKLY_GROWTH = 10_200;
     /// @inheritdoc IMinter
     uint256 public constant STEADY_WEEKLY_DECAY = 9_900;
     /// @inheritdoc IMinter
+    uint256 public constant MAXIMUM_TAIL_RATE = 380;
+    /// @inheritdoc IMinter
+    uint256 public constant MINIMUM_TAIL_RATE = 4;
+    /// @inheritdoc IMinter
     uint256 public constant MAX_BPS = 10_000;
     /// @inheritdoc IMinter
-    uint256 public constant NUDGE = 2;
+    uint256 public constant NUDGE = 4;
     /// @inheritdoc IMinter
-    uint256 public constant MINIMUM_TAIL_RATE = 1;
+    uint256 public constant TAIL_START = 4_275_016 * 1e18;
     /// @inheritdoc IMinter
-    uint256 public tailEmissionRate = 100;
+    uint256 public tailEmissionRate = 200;
     /// @inheritdoc IMinter
     uint256 public constant MAXIMUM_TEAM_RATE = 500;
     /// @inheritdoc IMinter
-    uint256 public teamRate = 500; // team emissions start at 5%
+    uint256 public teamRate = 300; // team emissions start at 3%
     /// @inheritdoc IMinter
     uint256 public weekly = 4_000_000 * 1e18;
     /// @inheritdoc IMinter
@@ -142,7 +146,7 @@ contract Minter is IMinter {
         address _epochGovernor = voter.epochGovernor();
         if (msg.sender != _epochGovernor) revert NotEpochGovernor();
         IEpochGovernor.ProposalState _state = IEpochGovernor(_epochGovernor).result();
-        if (epochCount < 24) revert TailEmissionsInactive();
+        if (weekly >= TAIL_START || epochCount < 24) revert TailEmissionsInactive();
         uint256 _period = activePeriod;
         if (proposals[_period]) revert AlreadyNudged();
         uint256 _newRate = tailEmissionRate;
@@ -150,9 +154,9 @@ contract Minter is IMinter {
 
         if (_state != IEpochGovernor.ProposalState.Expired) {
             if (_state == IEpochGovernor.ProposalState.Succeeded) {
-                _newRate = tailEmissionRate + NUDGE;
+                _newRate = _oldRate + NUDGE > MAXIMUM_TAIL_RATE ? MAXIMUM_TAIL_RATE : _oldRate + NUDGE;
             } else {
-                _newRate = tailEmissionRate < MINIMUM_TAIL_RATE + NUDGE ? MINIMUM_TAIL_RATE : tailEmissionRate - NUDGE;
+                _newRate = _oldRate - NUDGE < MINIMUM_TAIL_RATE ? MINIMUM_TAIL_RATE : _oldRate - NUDGE;
             }
             tailEmissionRate = _newRate;
         }
@@ -169,16 +173,15 @@ contract Minter is IMinter {
             activePeriod = _period;
             uint256 _weekly = weekly;
             uint256 _emission;
-            bool _tail = epochCount >= 25;
+            uint256 _totalSupply = aero.totalSupply();
+            bool _tail = (_weekly < TAIL_START && epochCount > 24);
 
             if (_tail) {
-                _emission = _weekly;
-                _weekly = (_weekly * tailEmissionRate * 100) / MAX_BPS;
-                weekly = _weekly;
+                _emission = (_totalSupply * tailEmissionRate) / MAX_BPS;
             } else {
                 _emission = _weekly;
                 if (epochCount < 5) {
-                    _weekly = (_weekly * FRIST_WEEKLY_GROWTH) / MAX_BPS;
+                    _weekly = (_weekly * FIRST_WEEKLY_GROWTH) / MAX_BPS;
                 } else if (epochCount < 10) {
                     _weekly = (_weekly * SECOND_WEEKLY_GROWTH) / MAX_BPS;
                 }

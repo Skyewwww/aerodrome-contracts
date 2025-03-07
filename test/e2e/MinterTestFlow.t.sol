@@ -43,7 +43,7 @@ contract MinterTestFlow is ExtendedBaseTest {
         /// epoch 1
         skipToNextEpoch(2 days); // gauge distributions spread out over 5 days
 
-        /// 10000000000000000000000000
+        /// 4000000000000000000000000
         uint256 expectedMint = _expectedMintAfter(1);
         vm.expectEmit(true, true, false, false, address(minter));
         emit Mint(address(owner), expectedMint, 0, false);
@@ -84,7 +84,7 @@ contract MinterTestFlow is ExtendedBaseTest {
         /// epoch 2
         skipToNextEpoch(1);
         uint256 balance = AERO.balanceOf(address(gauge));
-        /// 10_300_000_000000000000000000 = 10_300_000e18
+        /// 4_300_000_000000000000000000 = 4_300_000e18
         expectedMint = _expectedMintAfter(2);
         balance += expectedMint / 2;
 
@@ -92,27 +92,26 @@ contract MinterTestFlow is ExtendedBaseTest {
         emit Mint(address(voter), expectedMint, 0, false);
         voter.distribute(0, voter.length());
         assertLt(AERO.balanceOf(address(voter)), 1e6);
-        assertApproxEqRel(AERO.balanceOf(address(gauge)), balance, 1e6);
-        assertApproxEqRel(AERO.balanceOf(address(gauge)), balance, 1e6);
+        assertApproxEqRel(AERO.balanceOf(address(gauge)), balance, TOKEN_1);
+        assertApproxEqRel(AERO.balanceOf(address(gauge)), balance, TOKEN_1);
 
-        /// after 67 epochs, tail emissions turn on
-        for (uint256 i = 0; i < 65; i++) {
+        /// after 24 epochs, tail emissions turn on
+        for (uint256 i = 0; i < 22; i++) {
             skipToNextEpoch(1);
             minter.updatePeriod();
         }
         voter.distribute(0, voter.length());
-        // assertTrue(minter.weekly() < minter.TAIL_START());
+        assertTrue(minter.weekly() < minter.TAIL_START());
 
         // skip to first tail distribution
         skipToNextEpoch(1);
 
         minter.updatePeriod();
-        /// total aero supply ~1_318_923_747, tail emissions .29% of total supply
-        /// 1_318_923_747 ~= 50_000_000 initial supply + emissions until now
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 8_744_211 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~219_516_943, tail emissions 2% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_390_338 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
-        assertEq(minter.tailEmissionRate(), 67);
+        assertEq(minter.tailEmissionRate(), 200);
 
         // 1 now has larger lock balance than 2
         escrow.increaseUnlockTime(1, MAXTIME);
@@ -139,11 +138,11 @@ contract MinterTestFlow is ExtendedBaseTest {
 
         skipAndRoll(1 weeks); // epoch + 15 minutes + 2
         epochGovernor.execute(targets, values, calldatas, keccak256(bytes(description)));
-        assertEq(minter.tailEmissionRate(), 68);
+        assertEq(minter.tailEmissionRate(), 204);
 
         minter.updatePeriod();
-        /// total aero supply ~1_333_083_660, tail emissions .67% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 8_968_681 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~226_300_425, tail emissions 2.04% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_616_528 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
         description = Strings.toString(block.timestamp);
@@ -162,11 +161,11 @@ contract MinterTestFlow is ExtendedBaseTest {
 
         skipAndRoll(30 minutes + 3); // epoch + 30 minutes + 3
         epochGovernor.execute(targets, values, calldatas, keccak256(bytes(description)));
-        assertEq(minter.tailEmissionRate(), 68);
+        assertEq(minter.tailEmissionRate(), 204);
 
         minter.updatePeriod();
-        /// total aero supply ~1_347_869_657, tail emissions .68% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 9_064_968 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~233_425_720, tail emissions 2.04% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_761_884 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
         /// expect 0 (against vote) to pass
@@ -176,20 +175,22 @@ contract MinterTestFlow is ExtendedBaseTest {
 
         skipAndRoll(1 weeks);
         epochGovernor.execute(targets, values, calldatas, keccak256(bytes(description2)));
-        assertEq(minter.tailEmissionRate(), 67);
+        assertEq(minter.tailEmissionRate(), 200);
 
         minter.updatePeriod();
-        /// total aero supply ~1_361_640_291, tail emissions .67% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 9_027_516 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~240_771_377, tail emissions 2% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_815_427 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
     }
 
     /// @dev Helper to calculate expected tokens minted.
     function _expectedMintAfter(uint256 _weeks) internal pure returns (uint256) {
-        uint256 amount = 10_000_000 * 1e18;
+        uint256 amount = 4_000_000 * 1e18;
         for (uint256 i = 0; i < _weeks - 1; i++) {
-            if (_weeks <= 14) {
+            if (_weeks <= 4) {
                 amount = (amount * 10_300) / 10_000;
+            } if (_weeks <= 9) {
+                amount = (amount * 10_200) / 10_000;
             } else {
                 amount = (amount * 9_900) / 10_000;
             }

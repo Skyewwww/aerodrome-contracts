@@ -165,8 +165,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner));
         assertEq(checkpoint.delegatedBalance, 0);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner), 1, block.timestamp), 47945126204972095225334);
-        assertEq(escrow.balanceOfNFT(1), 47945126204972095225334);
+        assertEq(escrow.getPastVotes(address(owner), 1, block.timestamp), 191780504819888381506135);
+        assertEq(escrow.balanceOfNFT(1), 191780504819888381506135);
     }
 
     function testCreateLockOutsideAllowedZones() public {
@@ -187,14 +187,14 @@ contract VotingEscrowTest is BaseTest {
         // check locked balance state is updated correctly
         IVotingEscrow.LockedBalance memory locked = escrow.locked(tokenId);
         assertEq(convert(locked.amount), TOKEN_1 * 2);
-        assertEq(locked.end, 126403200);
+        assertEq(locked.end, 32054400);
         assertEq(locked.isPermanent, false);
 
         // check user point updates correctly
         assertEq(escrow.userPointEpoch(tokenId), 2);
         IVotingEscrow.UserPoint memory userPoint = escrow.userPointHistory(tokenId, 2);
-        assertEq(convert(userPoint.bias), 1994520516124422418); // (TOKEN_1 * 2 / MAXTIME) * (126403200 - 604802)
-        assertEq(convert(userPoint.slope), 15854895991); // TOKEN_1 * 2 / MAXTIME
+        assertEq(convert(userPoint.bias), 1994520421089395266); // (TOKEN_1 * 2 / MAXTIME) * (32054400 - 604802)
+        assertEq(convert(userPoint.slope), 63419583967); // TOKEN_1 * 2 / MAXTIME
         assertEq(userPoint.ts, 604802);
         assertEq(userPoint.blk, 2);
         assertEq(userPoint.permanent, 0);
@@ -202,14 +202,14 @@ contract VotingEscrowTest is BaseTest {
         // check global point updates correctly
         assertEq(escrow.epoch(), 2);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(2);
-        assertEq(convert(globalPoint.bias), 1994520516124422418);
-        assertEq(convert(globalPoint.slope), 15854895991);
+        assertEq(convert(globalPoint.bias), 1994520421089395266);
+        assertEq(convert(globalPoint.slope), 63419583967);
         assertEq(globalPoint.ts, 604802);
         assertEq(globalPoint.blk, 2);
         assertEq(globalPoint.permanentLockBalance, 0);
 
         assertEq(escrow.supply(), TOKEN_1 * 2);
-        assertEq(escrow.slopeChanges(126403200), -15854895991);
+        assertEq(escrow.slopeChanges(32054400), -63419583967);
     }
 
     function testIncreaseAmountWithPermanentLock() public {
@@ -303,8 +303,8 @@ contract VotingEscrowTest is BaseTest {
         // check global point updates correctly
         assertEq(escrow.epoch(), 2);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(2);
-        assertEq(convert(globalPoint.bias), 997260250071864015); // (TOKEN_1 / MAXTIME) * (126403200 - 604803)
-        assertEq(convert(globalPoint.slope), 7927447995); // TOKEN_1 / MAXTIME
+        assertEq(convert(globalPoint.bias), 997260178819180851); // (TOKEN_1 / MAXTIME) * (32054400 - 604803)
+        assertEq(convert(globalPoint.slope), 31709791983); // TOKEN_1 / MAXTIME
         assertEq(globalPoint.ts, 604803);
         assertEq(globalPoint.blk, 3);
         assertEq(globalPoint.permanentLockBalance, TOKEN_1 * 2);
@@ -327,9 +327,9 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner2));
         assertEq(checkpoint.delegatedBalance, TOKEN_1 * 2);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner2), tokenId2, 604803), TOKEN_1 * 2 + 997260250071864015);
-        assertEq(escrow.balanceOfNFT(tokenId2), 997260250071864015);
-        assertEq(escrow.totalSupply(), TOKEN_1 * 2 + 997260250071864015);
+        assertEq(escrow.getPastVotes(address(owner2), tokenId2, 604803), TOKEN_1 * 2 + 997260178819180851);
+        assertEq(escrow.balanceOfNFT(tokenId2), 997260178819180851);
+        assertEq(escrow.totalSupply(), TOKEN_1 * 2 + 997260178819180851);
         assertEq(escrow.supply(), TOKEN_1 * 3);
     }
 
@@ -674,7 +674,7 @@ contract VotingEscrowTest is BaseTest {
     function testMergeWithPermanentTo() public {
         AERO.approve(address(escrow), type(uint256).max);
         uint256 tokenId = escrow.createLock(TOKEN_1, MAXTIME);
-        assertEq(escrow.slopeChanges(126403200), -7927447995);
+        assertEq(escrow.slopeChanges(32054400), -31709791983);
         uint256 tokenId2 = escrow.createLock(TOKEN_1 * 2, MAXTIME);
         escrow.lockPermanent(tokenId2);
 
@@ -721,7 +721,7 @@ contract VotingEscrowTest is BaseTest {
         assertEq(globalPoint.blk, 2);
         assertEq(globalPoint.permanentLockBalance, TOKEN_1 * 3);
 
-        assertEq(escrow.slopeChanges(126403200), 0);
+        assertEq(escrow.slopeChanges(32054400), 0);
         assertEq(escrow.permanentLockBalance(), TOKEN_1 * 3);
     }
 
@@ -772,8 +772,8 @@ contract VotingEscrowTest is BaseTest {
 
         assertEq(escrow.epoch(), 2);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(2);
-        assertEq(convert(globalPoint.bias), 997260257999312010); // contribution from tokenId3
-        assertEq(convert(globalPoint.slope), 7927447995);
+        assertEq(convert(globalPoint.bias), 997260210528972834); // contribution from tokenId3
+        assertEq(convert(globalPoint.slope), 31709791983);
         assertEq(globalPoint.ts, 604802);
         assertEq(globalPoint.blk, 2);
         assertEq(globalPoint.permanentLockBalance, TOKEN_1 * 3);
@@ -808,8 +808,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoints.owner, address(owner2));
         assertEq(checkpoints.delegatedBalance, TOKEN_1 * 3);
         assertEq(checkpoints.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner2), tokenId3, 604802), TOKEN_1 * 3 + 997260257999312010);
-        assertEq(escrow.balanceOfNFT(tokenId3), 997260257999312010);
+        assertEq(escrow.getPastVotes(address(owner2), tokenId3, 604802), TOKEN_1 * 3 + 997260210528972834);
+        assertEq(escrow.balanceOfNFT(tokenId3), 997260210528972834);
     }
 
     function testCannotMergeWithPermanantFrom() public {
@@ -1033,7 +1033,7 @@ contract VotingEscrowTest is BaseTest {
         escrow.toggleSplit(address(0), true);
         uint256 mTokenId = escrow.createManagedLockFor(address(owner));
         AERO.approve(address(escrow), type(uint256).max);
-        uint256 tokenId = escrow.createLock(TOKEN_1, 4 * 365 * 86400);
+        uint256 tokenId = escrow.createLock(TOKEN_1, 1 * 365 * 86400);
         voter.depositManaged(tokenId, mTokenId);
 
         vm.expectRevert(IVotingEscrow.NotNormalNFT.selector);
@@ -1161,7 +1161,7 @@ contract VotingEscrowTest is BaseTest {
         escrow.createLock(TOKEN_1, MAXTIME);
 
         vm.expectEmit(true, true, true, true, address(escrow));
-        emit Split(1, 2, 3, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 127008000, 907201);
+        emit Split(1, 2, 3, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 32054400, 907201);
         (uint256 splitTokenId1, uint256 splitTokenId2) = escrow.split(1, TOKEN_1 / 4);
         assertEq(escrow.ownerOf(splitTokenId1), address(owner));
         assertEq(escrow.ownerOf(splitTokenId2), address(owner));
@@ -1178,7 +1178,7 @@ contract VotingEscrowTest is BaseTest {
 
         vm.prank(address(owner2));
         vm.expectEmit(true, true, true, true, address(escrow));
-        emit Split(1, 2, 3, address(owner2), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 127008000, 907201);
+        emit Split(1, 2, 3, address(owner2), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 32054400, 907201);
         (uint256 splitTokenId1, uint256 splitTokenId2) = escrow.split(1, TOKEN_1 / 4);
         assertEq(escrow.ownerOf(splitTokenId1), address(owner));
         assertEq(escrow.ownerOf(splitTokenId2), address(owner));
@@ -1316,8 +1316,8 @@ contract VotingEscrowTest is BaseTest {
         // check global point
         assertEq(escrow.epoch(), 2);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(2);
-        assertEq(convert(globalPoint.bias), 999657518273000010); // tokenId 2 contribution
-        assertEq(convert(globalPoint.slope), 7927447995);
+        assertEq(convert(globalPoint.bias), 987671169433313634); // tokenId 2 contribution
+        assertEq(convert(globalPoint.slope), 31709791983);
         assertEq(globalPoint.ts, 907202);
         assertEq(globalPoint.blk, 2);
         assertEq(globalPoint.permanentLockBalance, TOKEN_1);
@@ -1374,7 +1374,7 @@ contract VotingEscrowTest is BaseTest {
         uint256 aeroSupply = escrow.supply();
 
         vm.expectEmit(true, true, true, true, address(escrow));
-        emit Split(1, 4, 5, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 127008000, 907201);
+        emit Split(1, 4, 5, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 32054400, 907201);
         (uint256 splitTokenId1, uint256 splitTokenId2) = escrow.split(1, TOKEN_1 / 4);
         assertEq(splitTokenId1, 4);
         assertEq(splitTokenId2, 5);
@@ -1443,7 +1443,7 @@ contract VotingEscrowTest is BaseTest {
         uint256 aeroSupply = escrow.supply();
 
         vm.expectEmit(true, true, true, true, address(escrow));
-        emit Split(1, 4, 5, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 127008000, 907201);
+        emit Split(1, 4, 5, address(owner), (TOKEN_1 * 3) / 4, TOKEN_1 / 4, 32054400, 907201);
         (uint256 splitTokenId1, uint256 splitTokenId2) = escrow.split(1, TOKEN_1 / 4);
         assertEq(splitTokenId1, 4);
         assertEq(splitTokenId2, 5);
@@ -1555,9 +1555,9 @@ contract VotingEscrowTest is BaseTest {
         // timestamp: 604801
         AERO.approve(address(escrow), TOKEN_1);
         uint256 tokenId = escrow.createLock(TOKEN_1, MAXTIME);
-        assertEq(escrow.locked(tokenId).end, 126403200);
+        assertEq(escrow.locked(tokenId).end, 32054400);
         assertEq(escrow.slopeChanges(0), 0);
-        assertEq(escrow.slopeChanges(126403200), -7927447995); // slope is negative after lock creation
+        assertEq(escrow.slopeChanges(32054400), -31709791983); // slope is negative after lock creation
 
         skipAndRoll(1);
 
@@ -1656,13 +1656,13 @@ contract VotingEscrowTest is BaseTest {
         // timestamp: 604801
         AERO.approve(address(escrow), TOKEN_1);
         uint256 tokenId = escrow.createLock(TOKEN_1, MAXTIME);
-        assertEq(escrow.slopeChanges(126403200), -7927447995); // slope is negative after lock creation
+        assertEq(escrow.slopeChanges(32054400), -31709791983); // slope is negative after lock creation
         assertEq(escrow.numCheckpoints(tokenId), 1);
 
         skipAndRoll(1);
 
         escrow.lockPermanent(tokenId);
-        assertEq(escrow.slopeChanges(126403200), 0); // slope zero on permanent lock
+        assertEq(escrow.slopeChanges(32054400), 0); // slope zero on permanent lock
 
         skipAndRoll(1);
 
@@ -1673,13 +1673,13 @@ contract VotingEscrowTest is BaseTest {
         // check locked balance state is updated correctly
         IVotingEscrow.LockedBalance memory locked = escrow.locked(tokenId);
         assertEq(convert(locked.amount), TOKEN_1);
-        assertEq(locked.end, 126403200);
+        assertEq(locked.end, 32054400);
 
         // check user point updates correctly
         assertEq(escrow.userPointEpoch(tokenId), 3);
         IVotingEscrow.UserPoint memory userPoint = escrow.userPointHistory(tokenId, 3);
-        assertEq(convert(userPoint.bias), 997260250071864015); // (TOKEN_1 / MAXTIME) * (126403200 - 604803)
-        assertEq(convert(userPoint.slope), 7927447995); // TOKEN_1 / MAXTIME
+        assertEq(convert(userPoint.bias), 997260178819180851); // (TOKEN_1 / MAXTIME) * (32054400 - 604803)
+        assertEq(convert(userPoint.slope), 31709791983); // TOKEN_1 / MAXTIME
         assertEq(userPoint.ts, 604803);
         assertEq(userPoint.blk, 3);
         assertEq(userPoint.permanent, 0);
@@ -1687,13 +1687,13 @@ contract VotingEscrowTest is BaseTest {
         // check global point updates correctly
         assertEq(escrow.epoch(), 3);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(3);
-        assertEq(convert(globalPoint.bias), 997260250071864015);
-        assertEq(convert(globalPoint.slope), 7927447995);
+        assertEq(convert(globalPoint.bias), 997260178819180851);
+        assertEq(convert(globalPoint.slope), 31709791983);
         assertEq(globalPoint.ts, 604803);
         assertEq(globalPoint.blk, 3);
         assertEq(globalPoint.permanentLockBalance, 0);
 
-        assertEq(escrow.slopeChanges(126403200), -7927447995); // slope restored
+        assertEq(escrow.slopeChanges(32054400), -31709791983); // slope restored
         assertEq(escrow.permanentLockBalance(), 0);
         assertEq(escrow.numCheckpoints(tokenId), 1);
     }
@@ -1705,13 +1705,13 @@ contract VotingEscrowTest is BaseTest {
         AERO.approve(address(escrow), TOKEN_1);
         uint256 tokenId2 = escrow.createLock(TOKEN_1, MAXTIME);
         vm.stopPrank();
-        assertEq(escrow.slopeChanges(126403200), -7927447995 * 2); // slope is negative after lock creation
+        assertEq(escrow.slopeChanges(32054400), -31709791983 * 2); // slope is negative after lock creation
 
         skipAndRoll(1);
 
         escrow.lockPermanent(tokenId);
         escrow.delegate(tokenId, tokenId2);
-        assertEq(escrow.slopeChanges(126403200), -7927447995);
+        assertEq(escrow.slopeChanges(32054400), -31709791983);
 
         skipAndRoll(1);
 
@@ -1722,13 +1722,13 @@ contract VotingEscrowTest is BaseTest {
         // check locked balance state is updated correctly
         IVotingEscrow.LockedBalance memory locked = escrow.locked(tokenId);
         assertEq(convert(locked.amount), TOKEN_1);
-        assertEq(locked.end, 126403200);
+        assertEq(locked.end, 32054400);
 
         // check user point updates correctly
         assertEq(escrow.userPointEpoch(tokenId), 3);
         IVotingEscrow.UserPoint memory userPoint = escrow.userPointHistory(tokenId, 3);
-        assertEq(convert(userPoint.bias), 997260250071864015); // (TOKEN_1 / MAXTIME) * (126403200 - 604803)
-        assertEq(convert(userPoint.slope), 7927447995); // TOKEN_1 / MAXTIME
+        assertEq(convert(userPoint.bias), 997260178819180851); // (TOKEN_1 / MAXTIME) * (32054400 - 604803)
+        assertEq(convert(userPoint.slope), 31709791983); // TOKEN_1 / MAXTIME
         assertEq(userPoint.ts, 604803);
         assertEq(userPoint.blk, 3);
         assertEq(userPoint.permanent, 0);
@@ -1736,13 +1736,13 @@ contract VotingEscrowTest is BaseTest {
         // check global point updates correctly
         assertEq(escrow.epoch(), 3);
         IVotingEscrow.GlobalPoint memory globalPoint = escrow.pointHistory(3);
-        assertEq(convert(globalPoint.bias), 997260250071864015 * 2); // contribution from tokenId and tokenId2
-        assertEq(convert(globalPoint.slope), 7927447995 * 2);
+        assertEq(convert(globalPoint.bias), 997260178819180851 * 2); // contribution from tokenId and tokenId2
+        assertEq(convert(globalPoint.slope), 31709791983 * 2);
         assertEq(globalPoint.ts, 604803);
         assertEq(globalPoint.blk, 3);
         assertEq(globalPoint.permanentLockBalance, 0);
 
-        assertEq(escrow.slopeChanges(126403200), -7927447995 * 2);
+        assertEq(escrow.slopeChanges(32054400), -31709791983 * 2);
         assertEq(escrow.permanentLockBalance(), 0);
 
         // check tokenId dedelegates from tokenId2
@@ -1888,8 +1888,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner2));
         assertEq(checkpoint.delegatedBalance, TOKEN_1);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604802), TOKEN_1 + 997260257999312010);
-        assertEq(escrow.balanceOfNFT(2), 997260257999312010);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604802), TOKEN_1 + 997260210528972834);
+        assertEq(escrow.balanceOfNFT(2), 997260210528972834);
         skipAndRoll(1);
 
         // delegate 1 => 3
@@ -1928,8 +1928,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner2));
         assertEq(checkpoint.delegatedBalance, 0);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604803), 997260250071864015);
-        assertEq(escrow.balanceOfNFT(2), 997260250071864015);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604803), 997260178819180851);
+        assertEq(escrow.balanceOfNFT(2), 997260178819180851);
 
         // check prior and new checkpoint for tokenId 3
         // expect delegatedBalance 0 => TOKEN_1
@@ -1945,8 +1945,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner3));
         assertEq(checkpoint.delegatedBalance, TOKEN_1);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604803), TOKEN_1 + 997260250071864015);
-        assertEq(escrow.balanceOfNFT(3), 997260250071864015);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604803), TOKEN_1 + 997260178819180851);
+        assertEq(escrow.balanceOfNFT(3), 997260178819180851);
         skipAndRoll(1);
 
         // delegate 1 => 1
@@ -1979,8 +1979,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner2));
         assertEq(checkpoint.delegatedBalance, 0);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604804), 997260242144416020);
-        assertEq(escrow.balanceOfNFT(2), 997260242144416020);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604804), 997260147109388868);
+        assertEq(escrow.balanceOfNFT(2), 997260147109388868);
 
         // check prior and new checkpoint for tokenId 3
         // expect delegatedBalance TOKEN_1 => 0
@@ -1996,8 +1996,8 @@ contract VotingEscrowTest is BaseTest {
         assertEq(checkpoint.owner, address(owner3));
         assertEq(checkpoint.delegatedBalance, 0);
         assertEq(checkpoint.delegatee, 0);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604804), 997260242144416020);
-        assertEq(escrow.balanceOfNFT(3), 997260242144416020);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604804), 997260147109388868);
+        assertEq(escrow.balanceOfNFT(3), 997260147109388868);
 
         skipAndRoll(1);
 
@@ -2009,20 +2009,20 @@ contract VotingEscrowTest is BaseTest {
 
         // yet to delegate
         assertEq(escrow.getPastVotes(address(owner), 1, 604801), TOKEN_1);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604801), 997260265926760005);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604801), 997260265926760005);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604801), 997260242238764817);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604801), 997260242238764817);
         // 1 => 2
         assertEq(escrow.getPastVotes(address(owner), 1, 604802), 0);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604802), 997260257999312010 + TOKEN_1);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604802), 997260257999312010);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604802), 997260210528972834 + TOKEN_1);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604802), 997260210528972834);
         // 1 => 3
         assertEq(escrow.getPastVotes(address(owner), 1, 604803), 0);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604803), 997260250071864015);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604803), 997260250071864015 + TOKEN_1);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604803), 997260178819180851);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604803), 997260178819180851 + TOKEN_1);
         // 1 => 1 / 0
         assertEq(escrow.getPastVotes(address(owner), 1, 604804), TOKEN_1);
-        assertEq(escrow.getPastVotes(address(owner2), 2, 604804), 997260242144416020);
-        assertEq(escrow.getPastVotes(address(owner3), 3, 604804), 997260242144416020);
+        assertEq(escrow.getPastVotes(address(owner2), 2, 604804), 997260147109388868);
+        assertEq(escrow.getPastVotes(address(owner3), 3, 604804), 997260147109388868);
     }
 
     function testCannotDelegateBySigWithInvalidNonce() public {
