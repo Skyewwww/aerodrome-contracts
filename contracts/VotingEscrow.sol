@@ -247,8 +247,8 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
                              METADATA STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    string public constant name = "veMomodrome";
-    string public constant symbol = "veMOMO";
+    string public constant name = "veTrinityX";
+    string public constant symbol = "veTNT";
     string public constant version = "2.0.0";
     uint8 public constant decimals = 18;
 
