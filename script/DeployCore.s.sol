@@ -16,7 +16,7 @@ contract DeployCore is Base {
     string public jsonConstants;
     string public jsonOutput;
 
-    uint256 public constant AIRDROPPER_BALANCE = 200_000_000 * 1e18;
+    uint256 public constant AIRDROPPER_BALANCE = 20_000_000 * 1e18;
 
     // Vars to be set in each deploy script
     address feeManager;

@@ -1,0 +1,36 @@
+{
+    "allowedManager": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0",
+    "feeManager": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0",
+    "emergencyCouncil": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0",
+    "team": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0",
+    "WETH": "0x5300000000000000000000000000000000000011",
+    "whitelistTokens": [
+    ],
+    "pools": [
+
+    ],
+    "poolsAero": [
+        {
+            "stable": false,
+            "token": "0x5300000000000000000000000000000000000011"
+        }
+    ],
+    "minter": {
+        "liquid": [
+            {
+                "amount": 10000000000000000000000000,
+                "wallet": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0"
+            }
+        ],
+        "locked": [
+            {
+                "amount": 60000000000000000000000000,
+                "wallet": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0"
+            },
+            {
+                "amount": 10000000000000000000000000,
+                "wallet": "0xfa0d8ebca31a1501144a785a2929e9f91b0571d0"
+            }
+        ]
+    }
+}

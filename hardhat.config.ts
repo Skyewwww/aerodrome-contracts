@@ -4,11 +4,11 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-foundry";
 
 dotenv.config();
-tdly.setup({ automaticVerifications: true });
+// tdly.setup({ automaticVerifications: true });
 
 
 export default {
-    defaultNetwork: "tenderly",
+    // defaultNetwork: "tenderly",
     networks: {
         hardhat: {
         },
