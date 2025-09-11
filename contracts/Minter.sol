@@ -41,7 +41,7 @@ contract Minter is IMinter {
     /// @inheritdoc IMinter
     uint256 public constant NUDGE = 4;
     /// @inheritdoc IMinter
-    uint256 public constant TAIL_START = 4_275_016 * 1e18;
+    uint256 public constant TAIL_START = 4_108_996 * 1e18;
     /// @inheritdoc IMinter
     uint256 public tailEmissionRate = 200;
     /// @inheritdoc IMinter
@@ -180,9 +180,9 @@ contract Minter is IMinter {
                 _emission = (_totalSupply * tailEmissionRate) / MAX_BPS;
             } else {
                 _emission = _weekly;
-                if (epochCount < 5) {
+                if (epochCount < 4) {
                     _weekly = (_weekly * FIRST_WEEKLY_GROWTH) / MAX_BPS;
-                } else if (epochCount < 10) {
+                } else if (epochCount < 9) {
                     _weekly = (_weekly * SECOND_WEEKLY_GROWTH) / MAX_BPS;
                 }
                 else {

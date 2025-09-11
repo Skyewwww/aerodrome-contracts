@@ -107,8 +107,8 @@ contract MinterTestFlow is ExtendedBaseTest {
         skipToNextEpoch(1);
 
         minter.updatePeriod();
-        /// total aero supply ~219_516_943, tail emissions 2% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_390_338 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~214_984_869, tail emissions 2% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_299_697 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
         assertEq(minter.tailEmissionRate(), 200);
@@ -141,8 +141,8 @@ contract MinterTestFlow is ExtendedBaseTest {
         assertEq(minter.tailEmissionRate(), 204);
 
         minter.updatePeriod();
-        /// total aero supply ~226_300_425, tail emissions 2.04% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_616_528 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~221_625_853, tail emissions 2.04% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_521_167 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
         description = Strings.toString(block.timestamp);
@@ -164,8 +164,8 @@ contract MinterTestFlow is ExtendedBaseTest {
         assertEq(minter.tailEmissionRate(), 204);
 
         minter.updatePeriod();
-        /// total aero supply ~233_425_720, tail emissions 2.04% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_761_884 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~228_601_497, tail emissions 2.04% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_663_470 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
 
         /// expect 0 (against vote) to pass
@@ -178,8 +178,8 @@ contract MinterTestFlow is ExtendedBaseTest {
         assertEq(minter.tailEmissionRate(), 200);
 
         minter.updatePeriod();
-        /// total aero supply ~240_771_377, tail emissions 2% of total supply
-        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_815_427 * TOKEN_1, TOKEN_1);
+        /// total aero supply ~235_792_876, tail emissions 2% of total supply
+        assertApproxEqAbs(AERO.balanceOf(address(voter)), 4_715_857 * TOKEN_1, TOKEN_1);
         voter.distribute(0, voter.length());
     }
 
@@ -187,9 +187,9 @@ contract MinterTestFlow is ExtendedBaseTest {
     function _expectedMintAfter(uint256 _weeks) internal pure returns (uint256) {
         uint256 amount = 4_000_000 * 1e18;
         for (uint256 i = 0; i < _weeks - 1; i++) {
-            if (_weeks <= 4) {
+            if (_weeks <= 3) {
                 amount = (amount * 10_300) / 10_000;
-            } if (_weeks <= 9) {
+            } if (_weeks <= 8) {
                 amount = (amount * 10_200) / 10_000;
             } else {
                 amount = (amount * 9_900) / 10_000;
